@@ -1,5 +1,5 @@
 import React from 'react'
-import './Page.css'
+import '../css/Page.css';
 
 function Page({pokemons, currentPage}) {
   const pageSize = 10;

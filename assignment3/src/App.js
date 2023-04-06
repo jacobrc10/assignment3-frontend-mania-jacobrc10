@@ -1,8 +1,8 @@
-import Page from './Page';
-import Pagination from './Pagination';
+import Page from './components/Page';
+import Pagination from './components/Pagination';
 import React from 'react';
 import axios from 'axios';
-import './App.css';
+import './css/App.css';
 
 function App() {
 

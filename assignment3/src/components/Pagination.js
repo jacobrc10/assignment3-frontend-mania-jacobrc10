@@ -1,5 +1,5 @@
 import React from 'react';
-import './Pagination.css';
+import '../css/Pagination.css';
 
 function Pagination ({pokemons, pageSize, currentPage, onPageChange}) {
   const pageCount = Math.ceil(pokemons.length / pageSize);
