@@ -1,11 +1,16 @@
 import React from 'react';
-import '../css/Pagination.css';
+import Pagination from 'react-bootstrap/Pagination';
+import '../css/Paginations.css';
 
-function Pagination ({pokemons, pageSize, currentPage, onPageChange}) {
+function IPaginations ({pokemons, pageSize, currentPage, onPageChange}) {
   const pageCount = Math.ceil(pokemons.length / pageSize);
   // Show 10 pages at a time
   let pages = [];
-  if (currentPage <= 5) {
+  if (pageCount <= 10) {
+    for (let i = 1; i <= pageCount; i++) {
+      pages.push(i);
+    }
+  } else if (currentPage <= 5) {
     for (let i = 1; i <= 10; i++) {
       pages.push(i);
     }
@@ -20,36 +25,30 @@ function Pagination ({pokemons, pageSize, currentPage, onPageChange}) {
   }
 
   return (
-    <div
-    className='pagination'
-    >
+    <Pagination>
       { currentPage > 1 &&
-        <button
+        <Pagination.Prev
           onClick={() => onPageChange(currentPage - 1)}
-        >
-          Previous
-        </button>
+        />
       }
       {
         pages.map(page => (
-          <button
+          <Pagination.Item
             key={page}
             onClick={() => onPageChange(page)}
-            style={{backgroundColor: page === currentPage ? 'green' : null}}
+            active={page === currentPage}
           >
             {page}
-          </button>
+          </Pagination.Item>
         ))
       }
       { currentPage < pageCount &&
-        <button
+        <Pagination.Next
           onClick={() => onPageChange(currentPage + 1)}
-        >
-          Next
-        </button>
+        />
       }
-    </div>
+    </Pagination>
   )
 }
 
-export default Pagination
+export default IPaginations
