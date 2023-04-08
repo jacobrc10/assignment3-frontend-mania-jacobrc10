@@ -3,7 +3,6 @@ import '../css/Page.css';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
-import Table from 'react-bootstrap/Table';
 import Col from 'react-bootstrap/esm/Col';
 
 function Page({pokemons, currentPage}) {

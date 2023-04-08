@@ -62,20 +62,6 @@ function App() {
         if (page < 1 || page > Math.ceil(filteredPokemons.length / pageSize)) return;
         setCurrentPage(page);
       }}/>
-      <div>
-        <h1>Selected Name</h1>
-        <p>{name}</p>
-      </div>
-      <div>
-        <h1>Selected Types</h1>
-        <ul>
-          {
-            selectedTypes.map(type => (
-              <li key={type}>{type}</li>
-            ))
-          }
-        </ul>
-      </div>
     </div>
   );
 }
