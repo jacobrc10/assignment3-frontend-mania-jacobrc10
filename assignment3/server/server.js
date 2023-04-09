@@ -100,7 +100,7 @@ app.post(
       const accessToken = jwt.sign(
         { user: payload.user },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "10s" }
+        { expiresIn: "60s" }
       );
       res.header("auth-token-access", accessToken);
       res.send("All good!");
@@ -148,6 +148,25 @@ app.get(
     refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
 
     res.send("Logged out");
+  })
+);
+
+app.post(
+  "/user",
+  asyncWrapper(async (req, res) => {
+    const token = req.header("auth-token-access");
+    if (!token) throw new PokemonAuthError("No Token: Please provide a token.");
+    try {
+      const payload = await jwt.verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRET
+      );
+      res.send(payload.user);
+    } catch (error) {
+      throw new PokemonAuthError(
+        "Invalid Token: Please provide a valid token."
+      );
+    }
   })
 );
 
