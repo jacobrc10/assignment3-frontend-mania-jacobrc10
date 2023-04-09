@@ -5,8 +5,7 @@ import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/esm/Col';
 
-function Page({pokemons, currentPage}) {
-  const pageSize = 10;
+function Page({pokemons, currentPage, pageSize}) {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentPokemons = pokemons.slice(startIndex, endIndex);
