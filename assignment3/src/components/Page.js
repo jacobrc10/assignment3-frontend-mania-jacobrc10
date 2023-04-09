@@ -62,10 +62,9 @@ function Page({pokemons, currentPage, pageSize}) {
               variant="primary"
               onClick={() => {
                 setPokemon(pokemon);
-                console.log(currPokemon);
                 handleShow();
               }}
-              >Go somewhere</Button>
+              >Details</Button>
             </Card.Body>
           </Card>
         ))

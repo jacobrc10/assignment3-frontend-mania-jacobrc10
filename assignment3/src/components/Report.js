@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import jwt_decode from "jwt-decode";
+import Table from 'react-bootstrap/Table'
 
 
 
 function Report({ id, accessToken, setAccessToken, refreshToken }) {
+  const [reportHeaders, setReportHeaders] = useState([]);
   const [reportTable, setReportTable] = useState([]);
   useEffect(() => {
     const start = async () => {
@@ -14,8 +16,8 @@ function Report({ id, accessToken, setAccessToken, refreshToken }) {
             'auth-token-access': accessToken
           }
         });
-        console.log(res.data);
-        setReportTable(res.data);
+        setReportHeaders(res.data.headers);
+        setReportTable(res.data.data);
       }
       catch (err) {
         console.log(err);
@@ -58,17 +60,27 @@ function Report({ id, accessToken, setAccessToken, refreshToken }) {
   return (
     <>
       <div>Report {id && id}</div>
-      <div> {reportTable && 
-        reportTable.map((item) => {
-          return (
-            <div key={item._id}>
-              <div>{item._id}</div>
-              <div>{item.count}</div>
-            </div>
-          )
-        })
-      }
-      </div>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            {reportHeaders.map((header, index) => (
+              <th key={index}>{header}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {
+            // For each object in the array, create a row. For every key in the object, create a cell.
+            reportTable.map((row, index) => (
+              <tr key={index}>
+                {Object.keys(row).map((key, index) => (
+                  <td key={index}>{row[key]}</td>
+                ))}
+              </tr>
+            ))
+          }
+        </tbody>
+      </Table>
     </>
   )
 }

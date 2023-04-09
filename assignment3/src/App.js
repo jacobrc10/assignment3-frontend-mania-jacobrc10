@@ -37,7 +37,6 @@ function App() {
         username: e.target.username.value,
         password: e.target.password.value,
       };
-      console.log(values);
       const res = await axios.post("http://localhost:5000/login", values);
       setUser(res.data);
       setAccessToken(res.headers["auth-token-access"]);
