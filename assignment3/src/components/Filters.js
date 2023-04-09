@@ -14,7 +14,7 @@ function Filters({types, setSelectedTypes, setName}){
                     onChange={e => setName(e.target.value)}
                     />
                 </Form.Group>
-                <Form.Group controlId="formTypeCheckBoxes">
+                <Form.Group>
                     {
                         types.map(type => (
                             <Form.Check
