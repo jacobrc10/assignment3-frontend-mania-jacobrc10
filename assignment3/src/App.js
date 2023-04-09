@@ -1,5 +1,6 @@
 import Page from './components/Page';
 import IPaginations from './components/Paginations';
+import Login from './components/Login';
 import React from 'react';
 import axios from 'axios';
 import './css/App.css';
@@ -15,7 +16,7 @@ function App() {
   const [types, setTypes] = React.useState([]);
   const [selectedTypes, setSelectedTypes] = React.useState([]);
   const [name, setName] = React.useState([]);
-  const pageSize = 10;
+  const pageSize = 12;
 
   React.useEffect(() => {
     axios.get('https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/pokedex.json')
@@ -52,8 +53,9 @@ function App() {
 
   return (
     <div className="App">
+      <Login/>
       <Filters types={types} setSelectedTypes={setSelectedTypes} setName={setName}/>
-      <Page pokemons={filteredPokemons} currentPage={currentPage}/>
+      <Page pokemons={filteredPokemons} currentPage={currentPage} pageSize={pageSize}/>
       <IPaginations
       pokemons={filteredPokemons}
       pageSize={pageSize}
