@@ -19,7 +19,6 @@ const app = express()
 const start = asyncWrapper(async () => {
   await connectDB({ "drop": false });
 
-
   app.listen(process.env.authServerPORT, async (err) => {
     if (err)
       throw new PokemonDbError(err)
@@ -95,11 +94,8 @@ app.post('/login', asyncWrapper(async (req, res) => {
 
 
 app.get('/logout', asyncWrapper(async (req, res) => {
+  const refreshToken = req.header('auth-token-refresh')
+  refreshTokens = refreshTokens.filter(token => token !== refreshToken)
 
-  const user = await userModel.findOne({ token: req.query.appid })
-  if (!user) {
-    throw new PokemonAuthError("User not found")
-  }
-  await userModel.updateOne({ token: user.token }, { token_invalid: true })
   res.send("Logged out")
 }))
