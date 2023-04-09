@@ -8,6 +8,17 @@ function Login() {
   const [user, setUser] = useState({});
   const [accessToken, setAccessToken] = useState('');
   const [refreshToken, setRefreshToken] = useState('');
+
+  React.useEffect(() => {
+    if (localStorage.getItem('accessToken')) {
+      setAccessToken(localStorage.getItem('accessToken'));
+    }
+    if (localStorage.getItem('refreshToken')) {
+      setRefreshToken(localStorage.getItem('refreshToken'));
+    }
+  }, []);
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -20,12 +31,30 @@ function Login() {
     }
   }
 
+  const handleLogout = async () => {
+    try {
+      await axios.get("http://localhost:5000/logout", {}, {
+        headers: {
+          'auth-token-access': accessToken,
+          'auth-token-refresh': refreshToken
+        }
+      });
+      setUser({});
+      setAccessToken('');
+      setRefreshToken('');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <div>
       {user?.username ? (
         <>
-          <h1>Welcome {user.username}</h1>
+          <h1>API Dashboard</h1>
+          <b>Welcome {user.username}</b>
           <Dashboard accessToken={accessToken} setAccessToken={setAccessToken} refreshToken={refreshToken} />
+          <button onClick={handleLogout}>Logout</button>
         </>
       ) : (
         <form onSubmit={handleSubmit}>
