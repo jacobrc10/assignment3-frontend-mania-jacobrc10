@@ -5,11 +5,10 @@ const schema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    user_id: {
+    username: {
         type: String,
-        required: true
     },
-    endpoint: {
+    url: {
         type: String,
         required: true
     },
@@ -21,18 +20,6 @@ const schema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    response_time: {
-        type: Number,
-        required: true
-    },
-    request_body: {
-        type: Object,
-        required: true
-    },
-    response_body: {
-        type: Object,
-        required: true
-    }
 })
 
 module.exports = mongoose.model('apilogs', schema) //apilogs is the name of the collection in the db

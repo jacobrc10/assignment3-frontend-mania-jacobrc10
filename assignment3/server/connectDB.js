@@ -5,7 +5,12 @@ dotenv.config();
 
 const connectDB = async (input) => {
   try {
-    const x = await mongoose.connect(process.env.DB_STRING)
+    const x = await mongoose.connect(process.env.DB_STRING,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+      )
     console.log("Connected to db");
     if (input.drop === true)
       mongoose.connection.db.dropDatabase();

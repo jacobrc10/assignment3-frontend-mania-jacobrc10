@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const morgan = require("morgan");
+const { json } = require("body-parser");
 const express = require("express");
 const { connectDB } = require("./connectDB.js");
 const { populatePokemons } = require("./populatePokemons.js");
@@ -21,6 +23,7 @@ const {
 } = require("./errors.js");
 
 const app = express();
+app.use(json());
 // const port = 5000
 var pokeModel = null;
 
@@ -56,6 +59,7 @@ app.use(
 const jwt = require("jsonwebtoken");
 // const { findOne } = require("./userModel.js")
 const userModel = require("./userModel.js");
+const apiLogs = require("./apiLogs.js");
 
 const bcrypt = require("bcrypt");
 app.post(
@@ -147,6 +151,40 @@ app.get(
   })
 );
 
+const stream = {
+  write: (message) => {
+    console.log("message: ", message);
+    // Parse the message to get the url, method, and status
+    const messageArray = message.split(" ");
+    message = {
+      url: messageArray[0],
+      method: messageArray[1],
+      status: messageArray[2],
+    };
+    try {
+      const token = messageArray[3].trim();
+      const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      const log = new apiLogs({
+        username: payload.user.username,
+        url: message.url,
+        method: message.method,
+        status: message.status,
+      });
+      log.save();
+    } catch (error) {
+      const log = new apiLogs({
+        url: message.url,
+        method: message.method,
+        status: message.status,
+      });
+      log.save();
+    }
+  },
+};
+
+app.use(morgan(":url :method :status :req[auth-token-access]", { stream }));
+
+
 const authUser = asyncWrapper(async (req, res, next) => {
   // const token = req.body.appid
   const token = req.header("auth-token-access");
@@ -177,6 +215,8 @@ const authAdmin = asyncWrapper(async (req, res, next) => {
 });
 
 app.use(authUser); // Boom! All routes below this line are protected
+
+
 app.get(
   "/api/v1/pokemons",
   asyncWrapper(async (req, res) => {
