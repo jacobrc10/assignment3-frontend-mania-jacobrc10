@@ -6,10 +6,11 @@ import "./css/App.css";
 import Filters from "./components/Filters";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Dashboard from "./components/Dashboard";
-import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
+import Form from "react-bootstrap/Form";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
 
 function App() {
   // Grab the data from the API
@@ -22,8 +23,12 @@ function App() {
   const pageSize = 12;
 
   const [user, setUser] = useState({});
-  const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken") || "");
-  const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken") || "");
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken") || ""
+  );
+  const [refreshToken, setRefreshToken] = useState(
+    localStorage.getItem("refreshToken") || ""
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,11 +115,15 @@ function App() {
   React.useEffect(() => {
     if (refreshToken) {
       axios
-        .post("http://localhost:5000/requestNewAccessToken", {}, {
-          headers: {
-            "auth-token-refresh": refreshToken,
-          },
-        })
+        .post(
+          "http://localhost:5000/requestNewAccessToken",
+          {},
+          {
+            headers: {
+              "auth-token-refresh": refreshToken,
+            },
+          }
+        )
         .then((res) => {
           setAccessToken(res.headers["auth-token-access"]);
           const axiosConfig = {
@@ -122,11 +131,14 @@ function App() {
               "auth-token-access": res.headers["auth-token-access"],
             },
           };
-          axios.post("http://localhost:5000/user", {}, axiosConfig).then((res) => {
-            setUser(res.data);
-          }).catch((err) => {
-            console.log(err);
-          });
+          axios
+            .post("http://localhost:5000/user", {}, axiosConfig)
+            .then((res) => {
+              setUser(res.data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         })
         .catch((err) => {
           console.log(err);
@@ -136,74 +148,85 @@ function App() {
 
   return (
     <>
-    <div className="App">
       {user.username ? (
         <>
-          <h1>API Dashboard</h1>
-          <b>Welcome {user.username}</b>
-          <Dashboard
-            accessToken={accessToken}
-            setAccessToken={setAccessToken}
-            refreshToken={refreshToken}
-          />
-          <button onClick={handleLogout}>Logout</button>
-          <Filters
-            types={types}
-            setSelectedTypes={setSelectedTypes}
-            setName={setName}
-          />
-          <Page
-            pokemons={filteredPokemons}
-            currentPage={currentPage}
-            pageSize={pageSize}
-          />
-          <IPaginations
-            pokemons={filteredPokemons}
-            pageSize={pageSize}
-            currentPage={currentPage}
-            onPageChange={(page) => {
-              if (
-                page < 1 ||
-                page > Math.ceil(filteredPokemons.length / pageSize)
-              )
-                return;
-              setCurrentPage(page);
-            }}
-          />
+          <Navbar bg="dark" variant="dark">
+            <Container>
+              <Navbar.Brand>Pokepedia</Navbar.Brand>
+              <Navbar.Collapse className="justify-content-end">
+                <Button variant="outline-light" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
+          <Container>
+            <h1>Hello {user.username}</h1>
+            {user.role === "admin" ? (
+              <Dashboard
+                accessToken={accessToken}
+                setAccessToken={setAccessToken}
+                refreshToken={refreshToken}
+              />
+            ) : null}
+            <Filters
+              types={types}
+              setSelectedTypes={setSelectedTypes}
+              setName={setName}
+            />
+            <Page
+              pokemons={filteredPokemons}
+              currentPage={currentPage}
+              pageSize={pageSize}
+            />
+            <IPaginations
+              pokemons={filteredPokemons}
+              pageSize={pageSize}
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                if (
+                  page < 1 ||
+                  page > Math.ceil(filteredPokemons.length / pageSize)
+                )
+                  return;
+                setCurrentPage(page);
+              }}
+            />
+          </Container>
         </>
       ) : (
         <Container
-          style={{display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
         >
-        <Card
-          style={{padding: "2rem", width: "30rem"}}
-        >
-        <Form onSubmit={handleSubmit}>
-          <h1
-            style={{textAlign: "center"}}
-          >Pokepedia</h1>
-          <Form.Group className="mb-3" controlId="formUsername">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter username"
-              name="username"
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              name="password"
-            />
-          </Form.Group>
-          <Button as="input" type="submit" value="Login" />{' '}
-        </Form>
-        </Card>
+          <Card style={{ padding: "2rem", width: "30rem" }}>
+            <Form onSubmit={handleSubmit}>
+              <h1 style={{ textAlign: "center" }}>Pokepedia</h1>
+              <Form.Group className="mb-3" controlId="formUsername">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter username"
+                  name="username"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                />
+              </Form.Group>
+              <Button as="input" type="submit" value="Login" />{" "}
+            </Form>
+          </Card>
         </Container>
       )}
-    </div>
     </>
   );
 }

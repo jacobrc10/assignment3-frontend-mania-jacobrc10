@@ -353,9 +353,51 @@ app.patch(
   })
 );
 
-app.get("/report", (req, res) => {
-  console.log("Report requested");
-  res.send(`Table ${req.query.id}`);
-});
+app.get("/report", asyncWrapper(async (req, res) => {
+  if (!req.query.id) {
+    throw new PokemonBadRequestMissingID();
+  } else {
+    console.log("ID: " + req.query.id);
+    const id = parseInt(req.query.id);
+    switch (id) {
+      case 1:
+        // Unique API users over a period of time
+        console.log("Made it here");
+        const result = await apiLogs.aggregate(
+          [
+            // Group by date
+            {
+              $group: {
+                _id: {
+                  $dateToString: {
+                    format: "%Y-%m-%d",
+                    date: "$timestamp",
+                  },
+                },
+                count: { $sum: 1 },
+              },
+            },
+            // Sort by date
+            { $sort: { _id: 1 } },
+          ]);
+        res.json(result);
+        break;
+      case 2:
+        // Top API users over period of time
+        break;
+      case 3:
+        // Top users for each Endpoint
+        break;
+      case 4:
+        // 4xx Errors By Endpoint
+        break;
+      case 5:
+        // Recent 4xx/5xx Errors
+        break;
+      default:
+        break;
+    }
+  }
+}));
 
 app.use(handleErr);

@@ -5,7 +5,7 @@ import jwt_decode from "jwt-decode";
 
 
 function Report({ id, accessToken, setAccessToken, refreshToken }) {
-  const [reportTable, setReportTable] = useState('');
+  const [reportTable, setReportTable] = useState([]);
   useEffect(() => {
     const start = async () => {
       try {
@@ -13,7 +13,8 @@ function Report({ id, accessToken, setAccessToken, refreshToken }) {
           headers: {
             'auth-token-access': accessToken
           }
-        })
+        });
+        console.log(res.data);
         setReportTable(res.data);
       }
       catch (err) {
@@ -57,7 +58,17 @@ function Report({ id, accessToken, setAccessToken, refreshToken }) {
   return (
     <>
       <div>Report {id && id}</div>
-      <div> {reportTable && reportTable}</div>
+      <div> {reportTable && 
+        reportTable.map((item) => {
+          return (
+            <div key={item._id}>
+              <div>{item._id}</div>
+              <div>{item.count}</div>
+            </div>
+          )
+        })
+      }
+      </div>
     </>
   )
 }
