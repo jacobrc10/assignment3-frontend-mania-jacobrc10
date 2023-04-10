@@ -11,7 +11,7 @@ function Report({ id, accessToken, setAccessToken, refreshToken }) {
   useEffect(() => {
     const start = async () => {
       try {
-        const res = await axiosJWT.get(`http://localhost:5000/report?id=${id}`, {
+        const res = await axiosJWT.get(`https://comp4537-assignment3-romanocarlsen-jacob.onrender.com/report?id=${id}`, {
           headers: {
             'auth-token-access': accessToken
           }
@@ -28,7 +28,7 @@ function Report({ id, accessToken, setAccessToken, refreshToken }) {
 
   const refreshAccessToken = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/requestNewAccessToken", {}, {
+      const res = await axios.post("https://comp4537-assignment3-romanocarlsen-jacob.onrender.com/requestNewAccessToken", {}, {
         headers: {
           'auth-token-refresh': refreshToken
         }

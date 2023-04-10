@@ -39,7 +39,7 @@ function App() {
         username: e.target.username.value,
         password: e.target.password.value,
       };
-      const res = await axios.post("http://localhost:5000/login", values);
+      const res = await axios.post("https://comp4537-assignment3-romanocarlsen-jacob.onrender.com/login", values);
       setUser(res.data);
       setAccessToken(res.headers["auth-token-access"]);
       setRefreshToken(res.headers["auth-token-refresh"]);
@@ -53,7 +53,7 @@ function App() {
   const handleLogout = async () => {
     try {
       await axios.get(
-        "http://localhost:5000/logout",
+        "https://comp4537-assignment3-romanocarlsen-jacob.onrender.com/logout",
         {},
         {
           headers: {
@@ -117,7 +117,7 @@ function App() {
     if (refreshToken) {
       axios
         .post(
-          "http://localhost:5000/requestNewAccessToken",
+          "https://comp4537-assignment3-romanocarlsen-jacob.onrender.com/requestNewAccessToken",
           {},
           {
             headers: {
@@ -133,7 +133,7 @@ function App() {
             },
           };
           axios
-            .post("http://localhost:5000/user", {}, axiosConfig)
+            .post("https://comp4537-assignment3-romanocarlsen-jacob.onrender.com/user", {}, axiosConfig)
             .then((res) => {
               setUser(res.data);
             })
