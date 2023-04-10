@@ -1,24 +1,21 @@
-const { mongoose } = require('mongoose')
-const dotenv = require("dotenv")
+const { mongoose } = require("mongoose");
+const dotenv = require("dotenv");
 dotenv.config();
 // console.log(process.env)
 
 const connectDB = async (input) => {
   try {
-    const x = await mongoose.connect(process.env.DB_STRING,
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-      )
+    const x = await mongoose.connect(process.env.DB_STRING, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("Connected to db");
-    if (input.drop === true)
-      mongoose.connection.db.dropDatabase();
+    if (input.drop === true) mongoose.connection.db.dropDatabase();
     // console.log("Dropped db");
-    // get the data from Github 
+    // get the data from Github
   } catch (error) {
-    console.log('db error');
+    console.log("db error");
   }
-}
+};
 
-module.exports = { connectDB }
+module.exports = { connectDB };
