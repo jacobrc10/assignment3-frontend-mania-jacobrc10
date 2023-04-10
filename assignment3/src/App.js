@@ -11,9 +11,11 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
+import Spinner from "react-bootstrap/Spinner";
 
 function App() {
   // Grab the data from the API
+  const [loading, setLoading] = useState(true);
   const [pokemons, setPokemons] = React.useState([]);
   const [filteredPokemons, setFilteredPokemons] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -141,15 +143,77 @@ function App() {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   }, [refreshToken]);
 
+  if (loading) {
+    return (
+      <div 
+      className="App d-flex justify-content-center align-items-center"
+      >
+        <Spinner 
+        animation="border" 
+        role="status"
+        style={{
+          width: "100px",
+          height: "100px",
+          margin: "15rem",
+        }}
+        >
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
+    );
+  }
+
   return (
     <>
-      {user.username ? (
-        <>
-          <Navbar bg="dark" variant="dark">
+      {!user.username ? (
+        <Container
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <Card style={{ padding: "2rem", width: "30rem" }}>
+            <Form onSubmit={handleSubmit}>
+              <h1 id="loginHeader" style={{ textAlign: "center" }}>Pokepedia</h1>
+              <Form.Group className="mb-3" controlId="formUsername">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter username"
+                  name="username"
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                />
+              </Form.Group>
+              <br/>
+              <Form.Group className="d-grid gap-2 mb-3">
+              <Button as="input" variant="danger" type="submit" value="Login" />{" "}
+              </Form.Group>
+            </Form>
+          </Card>
+        </Container>
+      ) : (
+        <div
+        id="main"
+        >
+          <Navbar id="nav" bg="dark" variant="dark">
             <Container>
               <Navbar.Brand>Pokepedia</Navbar.Brand>
               <Navbar.Collapse className="justify-content-end">
@@ -160,7 +224,10 @@ function App() {
             </Container>
           </Navbar>
           <Container>
-            <h1>Hello {user.username}</h1>
+            <br/>
+            <div className="d-flex justify-content-center mb-3">
+            <h1>Welcome back, {user.username}</h1>
+            </div>
             {user.role === "admin" ? (
               <Dashboard
                 accessToken={accessToken}
@@ -191,40 +258,9 @@ function App() {
                 setCurrentPage(page);
               }}
             />
+            <br/>
           </Container>
-        </>
-      ) : (
-        <Container
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <Card style={{ padding: "2rem", width: "30rem" }}>
-            <Form onSubmit={handleSubmit}>
-              <h1 style={{ textAlign: "center" }}>Pokepedia</h1>
-              <Form.Group className="mb-3" controlId="formUsername">
-                <Form.Label>Username</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter username"
-                  name="username"
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                />
-              </Form.Group>
-              <Button as="input" type="submit" value="Login" />{" "}
-            </Form>
-          </Card>
-        </Container>
+        </div>
       )}
     </>
   );

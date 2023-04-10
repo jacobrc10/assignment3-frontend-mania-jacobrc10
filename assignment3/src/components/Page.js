@@ -16,6 +16,27 @@ function Page({pokemons, currentPage, pageSize}) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const typeColors = {
+    'Normal': '#A8A878',
+    'Fire': '#F08030',
+    'Water': '#6890F0',
+    'Electric': '#F8D030',
+    'Grass': '#78C850',
+    'Ice': '#98D8D8',
+    'Fighting': '#C22E28',
+    'Poison': '#A040A0',
+    'Ground': '#E0C068',
+    'Flying': '#A890F0',
+    'Psychic': '#F85888',
+    'Bug': '#A8B820',
+    'Rock': '#B8A038',
+    'Ghost': '#705898',
+    'Dragon': '#7038F8',
+    'Dark': '#705848',
+    'Steel': '#B8B8D0',
+    'Fairy': '#EE99AC'
+  }
+
   return (
     <div
     id='pokemon-container'
@@ -56,22 +77,43 @@ function Page({pokemons, currentPage, pageSize}) {
             >
               <Card.Title>{pokemon.name.english}</Card.Title>
               <Card.Text>
-                {pokemon.type.join(', ')}
+                {pokemon.type.map(type => (
+                  <Col
+                  style={{
+                    backgroundColor: typeColors[type],
+                    color: 'white',
+                    borderRadius: '5px',
+                    padding: '5px',
+                    margin: '5px'
+                  }}
+                  key={type}
+                  >
+                    {type}
+                  </Col>
+                ))}
               </Card.Text>
-              <Button 
-              variant="primary"
+            </Card.Body>
+            <Card.Footer className="d-grid gap-2" style={{
+              textAlign: 'center',
+              width: '100%',
+              backgroundColor: "#CC0000",
+              padding: '0px'
+              }}>
+            <Button 
+              variant="danger"
+              style={{width: '100%', backgroundColor: "#CC0000", border: 'none', padding: '1rem'}}
               onClick={() => {
                 setPokemon(pokemon);
                 handleShow();
               }}
               >Details</Button>
-            </Card.Body>
+            </Card.Footer>
           </Card>
         ))
       }
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>#{currPokemon?.id} {currPokemon?.name?.english}</Modal.Title>
+        <Modal.Header id="detailsHeader" closeButton>
+          <Modal.Title>#{currPokemon?.id} <b>{currPokemon?.name?.english}</b></Modal.Title>
         </Modal.Header>
         <Modal.Body
         style={{textAlign: 'center'}}
@@ -112,7 +154,24 @@ function Page({pokemons, currentPage, pageSize}) {
             <p><b>Speed:</b></p>
           </Col>
           <Col>
-            <p>{currPokemon?.type?.join(', ')}</p>
+            <p></p>
+            <div>{
+              currPokemon?.type?.map(type => (
+                <span
+                style={{
+                  backgroundColor: typeColors[type],
+                  color: 'white',
+                  borderRadius: '5px',
+                  padding: '5px',
+                  margin: '5px'
+                }}
+                key={type}
+                >
+                  {type}
+                </span>
+              ))
+              }</div>
+              <br></br>
             <p>{currPokemon?.base?.HP}</p>
             <p>{currPokemon?.base?.Attack}</p>
             <p>{currPokemon?.base?.Defense}</p>

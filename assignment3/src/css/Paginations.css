@@ -5,6 +5,18 @@
   margin: 0 auto;
   padding: 0;
   list-style: none;
+  font-family: 'Righteous', cursive;
+}
+
+.page-link {
+  color: #CC0000 !important;
+}
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: #fff !important;
+  background-color: #CC0000 !important;
+  border-color: #CC0000 !important;
 }
 
 @media screen and (max-width: 480px) {

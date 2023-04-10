@@ -59,7 +59,6 @@ function Report({ id, accessToken, setAccessToken, refreshToken }) {
 
   return (
     <>
-      <div>Report {id && id}</div>
       <Table striped bordered hover>
         <thead>
           <tr>
